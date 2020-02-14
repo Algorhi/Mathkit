@@ -44,9 +44,6 @@ Matrix::Matrix(int nSize, double value[]){
   Init(m_nNumRows, m_nNumColumns);
   SetData(value);
 }
-
-
-
 Matrix::Matrix(const Matrix& other){
   m_nNumRows     = other.GetNumColumns();
   m_nNumColumns  = other.GetNumRows();
@@ -65,6 +62,7 @@ Matrix::~Matrix(){
     printf("Delete Matrix\n");
   }
 }
+
 ///////////////////////////////
 //
 //
@@ -106,6 +104,7 @@ bool Matrix::MakeUnitMatrix(int nSize){
 
   return true;
 }
+
 ///////////////////////////////
 //
 //
@@ -113,7 +112,6 @@ bool Matrix::MakeUnitMatrix(int nSize){
 //
 //
 //////////////////////////////
-
 void Matrix::SetData(double value[]){
   //empty the memory
   memcpy(m_pData, 0, sizeof(double)*m_nNumRows*m_nNumColumns);
@@ -128,7 +126,6 @@ void Matrix::SetData(double value[]){
 //
 //
 //////////////////////////////
-
 bool Matrix::SetElement(int Row, int nCol, double value){
   if ((nRow < 0) || (nRow >= m_nNumRows) || (nCol < 0) || (nCol > m_nNumColumns))
     return false;
@@ -140,6 +137,7 @@ bool Matrix::SetElement(int Row, int nCol, double value){
 
   return true;
 }
+
 ///////////////////////////////
 // Get Data of Matrix
 // Inputs:None
@@ -148,6 +146,7 @@ bool Matrix::SetElement(int Row, int nCol, double value){
 double* Matrix::GetData() const{
   return m_pData;
 }
+
 ///////////////////////////////
 // Get Value of Matrix
 // Inputs:
@@ -161,3 +160,90 @@ double Matrix::GetElement(int nRow, int nCol) const{
   assert( m_pData != NULL ); // bad pointer error
   return m_pData[nCol+nRow*m_nNumColumns];    
 }
+
+///////////////////////////////////////////////////////////////////
+// 获取指定行的向量
+// 
+// 参数：
+// 1. int nRows - 指定的矩阵行数
+// 2. double *pVector - 指向向量中各元素的缓冲区
+//
+// 返回值：int 型，向量中各元素的个数，即矩阵的列数
+int Matrix::GetRowVector(int nRow, double* pVector) const {
+  if(pVector == NULL)
+      delete pVector;
+        
+   pVector = new double[m_nNumColumns];
+   assert(pVector != NULL);
+
+   for(int j=0; j<m_nNumColumns; ++j)
+      pVector[j]=GetElement(nRow,j);
+
+   return m_nNumColumns;    
+}
+
+////////////////////////////////////////////////////////////////
+// 获取指定列的向量
+// 
+// 参数：
+// 1. int nCols - 指定的矩阵列数
+// 2. double *pVector - 指向向量中各元素的缓冲区
+//
+// 返回值：int 型，向量中各元素的个数，即矩阵的行数
+int Matrix::GetColVector(int nCol, double* pVector) const {
+
+  if(pVector == NULL)
+    delete pVector;
+        
+  pVector = new double[m_nNumRows];
+  assert(pVector != NULL);
+
+  for(int i=0; i<m_nNumRows; ++i)
+    pVector[i]=GetElement(i,nCol);
+
+  return m_nNumRows;    
+}
+
+////////////////////////////////////////////////////////
+// 获取矩阵的列数
+// 
+// 参数：无
+//
+// 返回值：int 型，矩阵的列数
+int Matrix::GetNumColumns() const {
+  return m_nNumColumns;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// 获取矩阵的行数
+// 
+// 参数：无
+//
+// 返回值：int 型，矩阵的行数
+int Matrix::GetNumRows() const {
+  return m_nNumRows;
+}
+
+/////////////////////////////////////////////////////////////////
+// 数学运算符重载
+/////////////////////////////////////////////////////////////////
+// 重载运算符=，给矩阵赋值
+// 
+// 参数：
+// 1. const CMatrix& other - 用于给矩阵幅值的源矩阵
+// 返回值：CMatrix型的引用，所引用的矩阵与other相等
+Matrix& Matrix::operator =(const CMatrix& other) {
+  if(&other != this)
+  {
+    m_nNumRows    = other.GetNumRows();
+    m_nNumColumns = other.GetNumColumns();
+    Init(m_nNumRows, m_nNumColumns);
+
+  //copy the pointer
+    memcpy(m_pData, other.m_pData,sizeof(double)*m_nNumRows*m_nNumColumns);
+  }
+  // finally return a reference to ourselves
+  return *this;     
+}
+
+
