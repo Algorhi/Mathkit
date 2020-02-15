@@ -232,7 +232,7 @@ int Matrix::GetNumRows() const {
 // 参数：
 // 1. const CMatrix& other - 用于给矩阵幅值的源矩阵
 // 返回值：CMatrix型的引用，所引用的矩阵与other相等
-Matrix& Matrix::operator =(const CMatrix& other) {
+Matrix& Matrix::operator =(const Matrix& other) {
   if(&other != this)
   {
     m_nNumRows    = other.GetNumRows();
@@ -246,4 +246,57 @@ Matrix& Matrix::operator =(const CMatrix& other) {
   return *this;     
 }
 
+//////////////////////////////////////////////////////////////////////////////
+// 重载运算符==，判断矩阵是否相等
+// 
+// 参数：
+// 1. const CMatrix& other - 用于比较的矩阵
+// 返回值：bool型，两个矩阵相等则为ture,否则为false
+bool Matrix::operator==(const Matrix& other) const{
+  //首先检查行列数是否相等
+  if( (m_nNumRows != other.GetNumRows()) || (m_nColumns != other.GetNumColumns()) )
+    return false;
+
+  for(int i = 0; i < m_nNumRows; ++i)
+  {
+    for(int j = 0; j < m_nNumColumns; ++j)
+    {
+      if( GetElement(i, j) != other.GetElement(i, j) )
+        return false;
+    }
+  }
+  return true;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+// 重载运算符==，判断矩阵是否不相等
+// 
+// 参数：
+// 1. const CMatrix& other - 用于比较的矩阵
+// 返回值：bool型，两个矩阵不相等则为ture,否则为false
+bool Matrix::operator!=(const Matrix& other) const {
+  return !(*this == other);
+}
+
+//////////////////////////////////////////////////////////////////////////////
+// 重载运算符+，实现矩阵加法
+// 
+// 参数：
+// 1. const CMatrix& other - 与指定矩阵相加的矩阵
+// 返回值：CMatrix型，指定矩阵与other相加之和
+Matrix Matrix::operator +(const Matrix& other) const {
+  //首先检查行列数是否相等
+  assert( (m_nNumRows==other.GetNumRows()) && (m_nNumColumns==other.GetNumColumns()) ) ;
+  // 构造结果矩阵
+  Matrix result(*this);//拷贝构造
+  // 矩阵加法     
+  for(int i=0; i<m_nNumRows; ++i)
+  {
+    for(int j=0; j<m_nNumColumns; ++j)
+      {
+        result.SetElement(i,j,result.GetElement(i,j)+other.GetElement(i,j));
+      }
+  }
+  return result;
+}
 

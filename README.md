@@ -1,2 +1,0 @@
-# Numcalc
-Numerical calculation algorithms
