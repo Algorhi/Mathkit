@@ -1,7 +1,7 @@
 
 CC = g++
-MF.bin:mainf.cpp func.cpp
-	$(CC) -o MF.bin mainf.cpp func.cpp
+mainf.bin:mainf.cpp func.cpp
+	$(CC) -o mainf.bin mainf.cpp func.cpp
 
 clean:
-	rm -i MF.bin
+	rm -i mainf.bin
